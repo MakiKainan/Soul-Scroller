@@ -97,7 +97,7 @@ public static class FeedSceneSetup
         var layoutGroup = contentGO.AddComponent<VerticalLayoutGroup>();
         layoutGroup.childAlignment = TextAnchor.UpperCenter;
         layoutGroup.childControlWidth = true;
-        layoutGroup.childControlHeight = false;
+        layoutGroup.childControlHeight = true; // must be true or LayoutElement.preferredHeight is ignored and cards collapse to 0
         layoutGroup.childForceExpandWidth = true;
         layoutGroup.childForceExpandHeight = false;
         layoutGroup.spacing = 0;
