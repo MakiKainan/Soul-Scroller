@@ -5,13 +5,14 @@ using UnityEngine.UI;
 [RequireComponent(typeof(ScrollRect))]
 public class FeedScroller : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 {
-    [SerializeField] private float cardHeight = 1920f;
+    private float cardHeight;
+
     [SerializeField] private double moneyPerSwipe = 1.0;
     [SerializeField] private float snapSpeed = 10f;
-    // ponytail: tuned to half of the default cardHeight (1920) so a swipe
-    // commits once you're "at the middle" — bump this together with cardHeight
-    // if that value changes, not worth a derived formula for one scene.
-    [SerializeField] private float swipeThreshold = 960f;
+
+    [Header("Sensitivitas Tarikan")]
+    [SerializeField] private float swipeThreshold = 50f;
+    [SerializeField] private float flickVelocityThreshold = 300f;
 
     private ScrollRect scrollRect;
     private RectTransform content;
@@ -19,40 +20,53 @@ public class FeedScroller : MonoBehaviour, IBeginDragHandler, IEndDragHandler
     private int targetIndex;
     private bool isSnapping;
     private float dragStartAnchoredY;
+    private float maxScrollUpLimit;
 
     private void Awake()
     {
         scrollRect = GetComponent<ScrollRect>();
         content = scrollRect.content;
+
+        RectTransform viewportRect = scrollRect.viewport != null ? scrollRect.viewport : GetComponent<RectTransform>();
+        cardHeight = viewportRect.rect.height;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         isSnapping = false;
         dragStartAnchoredY = content.anchoredPosition.y;
+
+        maxScrollUpLimit = (settledIndex * cardHeight) - (cardHeight * 0.25f);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        Vector2 pos = content.anchoredPosition;
+
+        if (pos.y < maxScrollUpLimit)
+        {
+            pos.y = maxScrollUpLimit;
+            content.anchoredPosition = pos;
+
+            scrollRect.velocity = Vector2.zero;
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         float dragDistance = content.anchoredPosition.y - dragStartAnchoredY;
+        float currentVelocityY = scrollRect.velocity.y;
 
-        // Top-anchored content: anchoredPosition.y increases as you scroll down to later cards.
-        // Swipe up (reveal next card) = distance goes positive.
-        if (dragDistance > swipeThreshold)
+        if (dragDistance > swipeThreshold || currentVelocityY > flickVelocityThreshold)
         {
             targetIndex = Mathf.Clamp(settledIndex + 1, 0, content.childCount - 1);
         }
-        // Swipe down (reveal previous card) = distance goes negative.
-        else if (dragDistance < -swipeThreshold)
-        {
-            targetIndex = Mathf.Clamp(settledIndex - 1, 0, content.childCount - 1);
-        }
         else
         {
-            // Weak/cancelled drag - snap to whichever card is nearest right now.
-            targetIndex = CalculateNearestIndex(content.anchoredPosition.y, cardHeight, content.childCount);
+            targetIndex = settledIndex;
         }
 
+        scrollRect.velocity = Vector2.zero;
         isSnapping = true;
     }
 
@@ -72,7 +86,10 @@ public class FeedScroller : MonoBehaviour, IBeginDragHandler, IEndDragHandler
             if (targetIndex != settledIndex)
             {
                 settledIndex = targetIndex;
-                GameManager.Instance.AddMoney(moneyPerSwipe);
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.AddMoney(moneyPerSwipe);
+                }
             }
         }
 
