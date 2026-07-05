@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public void AddMoney(double amount)
@@ -24,6 +25,14 @@ public class GameManager : MonoBehaviour
         // ponytail: plain double is enough for phase 1 (no upgrades/exponential
         // growth yet). Swap to a BigDouble type when upgrades land, per CLAUDE.md.
         Money += amount;
+        OnMoneyChanged?.Invoke(Money);
+    }
+
+    public void BuyUpgrade(double amount)
+    {
+        // ponytail: plain double is enough for phase 1 (no upgrades/exponential
+        // growth yet). Swap to a BigDouble type when upgrades land, per CLAUDE.md.
+        Money -= amount;
         OnMoneyChanged?.Invoke(Money);
     }
 
