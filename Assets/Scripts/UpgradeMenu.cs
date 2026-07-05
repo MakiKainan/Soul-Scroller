@@ -2,13 +2,17 @@
 
 public class UpgradeMenu : MonoBehaviour
 {
+    [SerializeField] private double cost = 10.0;
+    [SerializeField] private double moneyPerScrollIncrease = 1.0;
+
     public void BuyItems()
     {
         if (GameManager.Instance != null)
         {
-            if (GameManager.Instance.Money >= 10.0)
+            if (GameManager.Instance.Money >= cost)
             {
-                GameManager.Instance.BuyUpgrade(10.0);
+                GameManager.Instance.BuyUpgrade(cost);
+                GameManager.Instance.IncreaseMoneyPerScroll(moneyPerScrollIncrease);
             }
             else
             {

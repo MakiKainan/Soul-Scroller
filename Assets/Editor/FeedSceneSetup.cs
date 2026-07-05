@@ -46,7 +46,6 @@ public static class FeedSceneSetup
         var scroller = feedGO.AddComponent<FeedScroller>();
         var scrollerSO = new SerializedObject(scroller);
         scrollerSO.FindProperty("cardHeight").floatValue = CardHeight;
-        scrollerSO.FindProperty("moneyPerSwipe").doubleValue = 1.0;
         scrollerSO.FindProperty("snapSpeed").floatValue = 10f;
         scrollerSO.ApplyModifiedPropertiesWithoutUndo();
 

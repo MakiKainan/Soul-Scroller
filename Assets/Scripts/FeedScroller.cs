@@ -7,7 +7,6 @@ public class FeedScroller : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 {
     private float cardHeight;
 
-    [SerializeField] private double moneyPerSwipe = 1.0;
     [SerializeField] private float snapSpeed = 10f;
 
     [Header("Sensitivitas Tarikan")]
@@ -88,7 +87,7 @@ public class FeedScroller : MonoBehaviour, IBeginDragHandler, IEndDragHandler
                 settledIndex = targetIndex;
                 if (GameManager.Instance != null)
                 {
-                    GameManager.Instance.AddMoney(moneyPerSwipe);
+                    GameManager.Instance.AddMoney(GameManager.Instance.MoneyPerScroll);
                 }
             }
         }
