@@ -19,6 +19,12 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        string savedMoney = PlayerPrefs.GetString("Save_Money", "0");
+        if (double.TryParse(savedMoney, out double parsed))
+        {
+            Money = parsed;
+        }
     }
 
     public void AddMoney(double amount)
@@ -26,6 +32,7 @@ public class GameManager : MonoBehaviour
         // ponytail: plain double is enough for phase 1 (no upgrades/exponential
         // growth yet). Swap to a BigDouble type when upgrades land, per CLAUDE.md.
         Money += amount;
+        SaveMoney();
         OnMoneyChanged?.Invoke(Money);
     }
 
@@ -34,6 +41,7 @@ public class GameManager : MonoBehaviour
         // ponytail: plain double is enough for phase 1 (no upgrades/exponential
         // growth yet). Swap to a BigDouble type when upgrades land, per CLAUDE.md.
         Money -= amount;
+        SaveMoney();
         OnMoneyChanged?.Invoke(Money);
     }
 
@@ -45,6 +53,13 @@ public class GameManager : MonoBehaviour
     public void ResetMoney()
     {
         Money = 0;
+        SaveMoney();
         OnMoneyChanged?.Invoke(Money);
+    }
+
+    private void SaveMoney()
+    {
+        PlayerPrefs.SetString("Save_Money", Money.ToString());
+        PlayerPrefs.Save();
     }
 }

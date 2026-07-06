@@ -89,6 +89,10 @@ public class FeedScroller : MonoBehaviour, IBeginDragHandler, IEndDragHandler
                 {
                     GameManager.Instance.AddMoney(GameManager.Instance.MoneyPerScroll);
                 }
+                if (DailyQuestManager.Instance != null)
+                {
+                    DailyQuestManager.Instance.AddSwipe();
+                }
             }
         }
 

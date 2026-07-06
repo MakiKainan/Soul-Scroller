@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneSwitcher : MonoBehaviour
@@ -6,6 +6,11 @@ public class SceneSwitcher : MonoBehaviour
     public void ToUpgradeShop()
     {
         SceneManager.LoadScene("UpgradeShop");
+    }
+
+    public void ToDailyQuest()
+    {
+        SceneManager.LoadScene("DailyQuest");
     }
 
     public void BackToGame()

@@ -11,5 +11,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/UpgradeShop.unity
     guid: 22ac661b0d8fb354b831bc09b67bc261
+  - enabled: 1
+    path: Assets/Scenes/DailyQuest.unity
+    guid: 48e4b097410724f4dabe76ace6eca0b2
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
