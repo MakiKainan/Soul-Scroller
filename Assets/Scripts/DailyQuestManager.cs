@@ -7,9 +7,9 @@ public class DailyQuestManager : MonoBehaviour
 
     public int SwipesToday { get; private set; }
     public bool IsRewardClaimed { get; private set; }
-    
+
     // Quest Harian: Scroll sebanyak 50 kali
-    public int SwipeGoal = 50; 
+    public int SwipeGoal = 50;
     public double RewardAmount = 100.0;
 
     public event Action OnQuestProgressChanged;
@@ -23,7 +23,7 @@ public class DailyQuestManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        
+
         LoadProgress();
         CheckNewDay();
     }
@@ -31,7 +31,7 @@ public class DailyQuestManager : MonoBehaviour
     public void AddSwipe()
     {
         if (IsRewardClaimed) return; // Berhenti menghitung kalau sudah diklaim hari ini
-        
+
         SwipesToday++;
         SaveProgress();
         OnQuestProgressChanged?.Invoke();

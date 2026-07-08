@@ -20,7 +20,7 @@ public class DailyQuestUI : MonoBehaviour
 
         DailyQuestManager.Instance.OnQuestProgressChanged += UpdateUI;
         claimButton.onClick.AddListener(OnClaimClicked);
-        
+
         UpdateUI();
     }
 
@@ -35,7 +35,7 @@ public class DailyQuestUI : MonoBehaviour
     private void UpdateUI()
     {
         var manager = DailyQuestManager.Instance;
-        
+
         questDescriptionText.text = $"Scroll {manager.SwipeGoal} times today.\nReward: ${manager.RewardAmount}";
         progressText.text = $"Progress: {manager.SwipesToday} / {manager.SwipeGoal}";
 
