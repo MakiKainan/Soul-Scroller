@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -20,46 +21,57 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        string savedMoney = PlayerPrefs.GetString("Save_Money", "0");
-        if (double.TryParse(savedMoney, out double parsed))
-        {
-            Money = parsed;
-        }
+        LoadData();
     }
 
     public void AddMoney(double amount)
     {
-        // ponytail: plain double is enough for phase 1 (no upgrades/exponential
-        // growth yet). Swap to a BigDouble type when upgrades land, per CLAUDE.md.
         Money += amount;
-        SaveMoney();
+        SaveData();
         OnMoneyChanged?.Invoke(Money);
     }
 
     public void BuyUpgrade(double amount)
     {
-        // ponytail: plain double is enough for phase 1 (no upgrades/exponential
-        // growth yet). Swap to a BigDouble type when upgrades land, per CLAUDE.md.
+        if (Money < amount) return; // Guard: prevent negative money
         Money -= amount;
-        SaveMoney();
+        SaveData();
         OnMoneyChanged?.Invoke(Money);
     }
 
     public void IncreaseMoneyPerScroll(double amount)
     {
         MoneyPerScroll += amount;
+        SaveData(); // Bug fix: MoneyPerScroll is now persisted
     }
 
     public void ResetMoney()
     {
         Money = 0;
-        SaveMoney();
+        SaveData();
         OnMoneyChanged?.Invoke(Money);
     }
 
-    private void SaveMoney()
+    private void SaveData()
     {
-        PlayerPrefs.SetString("Save_Money", Money.ToString());
+        // Use InvariantCulture to prevent locale-dependent parsing issues
+        PlayerPrefs.SetString("Save_Money", Money.ToString(CultureInfo.InvariantCulture));
+        PlayerPrefs.SetString("Save_MoneyPerScroll", MoneyPerScroll.ToString(CultureInfo.InvariantCulture));
         PlayerPrefs.Save();
+    }
+
+    private void LoadData()
+    {
+        string savedMoney = PlayerPrefs.GetString("Save_Money", "0");
+        if (double.TryParse(savedMoney, NumberStyles.Any, CultureInfo.InvariantCulture, out double parsedMoney))
+        {
+            Money = parsedMoney;
+        }
+
+        string savedMPS = PlayerPrefs.GetString("Save_MoneyPerScroll", "1");
+        if (double.TryParse(savedMPS, NumberStyles.Any, CultureInfo.InvariantCulture, out double parsedMPS))
+        {
+            MoneyPerScroll = parsedMPS;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -21,6 +21,7 @@ public class AlertManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
 
         canvasGroup = GetComponent<CanvasGroup>();
         canvasGroup.alpha = 0;

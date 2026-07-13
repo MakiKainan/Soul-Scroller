@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(ScrollRect))]
-public class FeedScroller : MonoBehaviour, IBeginDragHandler, IEndDragHandler
+public class FeedScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private float cardHeight;
 

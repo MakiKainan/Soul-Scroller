@@ -26,6 +26,11 @@ public class DailyQuestUI : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (claimButton != null)
+        {
+            claimButton.onClick.RemoveListener(OnClaimClicked);
+        }
+
         if (DailyQuestManager.Instance != null)
         {
             DailyQuestManager.Instance.OnQuestProgressChanged -= UpdateUI;
