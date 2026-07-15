@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public double MoneyPerScroll { get; private set; } = 1.0;
 
     public event Action<double> OnMoneyChanged;
+    public event Action<double> OnMultiplierChanged;
 
     private void Awake()
     {
@@ -42,7 +43,8 @@ public class GameManager : MonoBehaviour
     public void IncreaseMoneyPerScroll(double amount)
     {
         MoneyPerScroll += amount;
-        SaveData(); // Bug fix: MoneyPerScroll is now persisted
+        SaveData();
+        OnMultiplierChanged?.Invoke(MoneyPerScroll);
     }
 
     public void ResetMoney()
